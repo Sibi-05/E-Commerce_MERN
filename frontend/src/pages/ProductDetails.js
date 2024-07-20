@@ -268,7 +268,7 @@ const ProductDetails = () => {
                 isLoading={cartLoading}
                 onClick={() => addCart()}
               />
-              <Button text="Buy Now" full />
+              <Button text="Buy Now" full onClick={() => navigate("/cart")} />
               <Button
                 leftIcon={
                   favorite ? (
