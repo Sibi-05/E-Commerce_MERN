@@ -11,54 +11,85 @@ dotenv.config();
 export const UserRegister = async (req, res, next) => {
   try {
     const { email, password, name, img } = req.body;
+
+    // Basic input validation
+    if (!email || !password || !name) {
+      return res.status(400).json(createError(400, "Name, email and password are required"));
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return next(createError(409, "Email is already in use"));
+      return res.status(409).json(createError(409, "Email is already in use"));
     }
+
     const salt = bcrypt.genSaltSync(10);
-    const hashedpassword = bcrypt.hashSync(password, salt);
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
     const user = new User({
       name,
       email,
-      password: hashedpassword,
+      password: hashedPassword,
       img,
     });
-    const createduser = user.save();
-    const token = jwt.sign({ id: createduser._id }, process.env.JWT, {
-      expiresIn: "9999 years",
+
+    const createdUser = await user.save();
+
+    const token = jwt.sign(
+      { id: createdUser._id },
+      process.env.JWT,
+      { expiresIn: "9999 years" }
+    );
+
+    return res.status(201).json({
+      token,
+      user: createdUser,
+      message: "Registration Successful",
     });
-    return res.status(200).json({ token, user });
+
   } catch (error) {
-    return next(error);
+    console.error("Registration error:", error);
+    return res.status(500).json(createError(500, "Internal server error"));
   }
 };
 
-//user login controller
+
 export const UserLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(email);
-    const existingUser = await User.findOne({ email });
-    if (!existingUser) {
-      return next(createError(404, "user not found"));
+
+    // Basic validation
+    if (!email || !password) {
+      return res.status(400).json(createError(400, "Email and password are required"));
     }
 
-    const isPasswordCorrect = await bcrypt.compareSync(
-      password,
-      existingUser.password
-    );
-    if (!isPasswordCorrect) {
-      return next(createError(403, "Incorrect password"));
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return res.status(404).json(createError(404, "User not found"));
     }
-    const token = jwt.sign({ id: existingUser._id }, process.env.JWT, {
-      expiresIn: "9999 years",
+
+    const isPasswordCorrect = bcrypt.compareSync(password, existingUser.password);
+    if (!isPasswordCorrect) {
+      return res.status(403).json(createError(403, "Incorrect password"));
+    }
+
+    const token = jwt.sign(
+      { id: existingUser._id },
+      process.env.JWT,
+      { expiresIn: "9999 years" }
+    );
+
+    return res.status(200).json({
+      token,
+      user: existingUser,
+      message: "Login Successful"
     });
-    return res.status(200).json({ token, user: existingUser });
+
   } catch (error) {
-    return next(error);
+    console.error("Login error:", error);
+    return res.status(500).json(createError(500, "Internal server error"));
   }
 };
+
 
 // Cart
 export const addToCart = async (req, res, next) => {
@@ -175,12 +206,11 @@ export const getAllOrders = async (req, res, next) => {
 
 export const addToFavorites = async (req, res, next) => {
   try {
-    const { productId } = req.body;
-    const userJWT = req.user;
+    const { productID } =await req.body;
+    const userJWT =await req.user;
     const user = await User.findById(userJWT.id);
-
-    if (!user.favourites.includes(productId)) {
-      user.favourites.push(productId);
+    if (!user.favourites.includes(productID)) {
+      user.favourites.push(productID);
       await user.save();
     }
 
@@ -194,19 +224,30 @@ export const addToFavorites = async (req, res, next) => {
 
 export const removeFromFavorites = async (req, res, next) => {
   try {
-    const { productId } = req.body;
-    const userJWT = req.user;
-    const user = await User.findById(userJWT.id);
+    const { productID } = req.body; 
+    console.log("😇 Product ID:", productID);
 
-    user.favourites = user.favourites.filter((fav) => !fav.equals(productId));
+    const userJWT = req.user; 
+    const user = await User.findById(userJWT.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("😇 Current favorites:", user.favourites);
+
+    user.favourites = user.favourites.filter((fav) => fav.toString() !== productID);
+
     await user.save();
-    return res
-      .status(200)
-      .json({ message: "Product removed from favorites successfully", user });
+
+    return res.status(200).json({
+      message: "Product removed from favorites successfully",
+      user,
+    });
   } catch (err) {
     next(err);
   }
 };
+
 
 export const getUserFavourites = async (req, res, next) => {
   try {
@@ -216,7 +257,7 @@ export const getUserFavourites = async (req, res, next) => {
     if (!user) {
       return next(createError(404, "User not found"));
     }
-
+console.log(user);
     return res.status(200).json(user.favourites);
   } catch (err) {
     next(err);

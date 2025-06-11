@@ -1,6 +1,6 @@
 export const category = [
   {
-    img: "https://jaxsonmaximus.com/wp-content/uploads/2020/04/34394c211f01e58539f91e79e6ce1420.jpg",
+    img: "https://images.unsplash.com/photo-1600574691453-499962cc0611?q=80&w=3072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     name: "Casual Wear",
     off: "20-40% OFF",
   },
@@ -10,7 +10,7 @@ export const category = [
     off: "10-20% OFF",
   },
   {
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqR8nb8uO-HERwcu2eIWBFaSY7DC_KaX19hvBNApYgTgacS1Hhhx8WJOY_-jacJnwzXqY&usqp=CAU",
+    img: "https://images.pexels.com/photos/6834223/pexels-photo-6834223.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     name: "Winter Wear",
     off: "20-40% OFF",
   },

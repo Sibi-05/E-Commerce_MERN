@@ -68,6 +68,7 @@ const Navlink = styled(NavLink)`
   cursor: pointer;
   transition: all 1s slide-in;
   text-decoration: none;
+  white-space: nowrap;
   &:hover {
     color: ${({ theme }) => theme.primary};
   }
@@ -76,6 +77,7 @@ const Navlink = styled(NavLink)`
     border-bottom: 1.8px solid ${({ theme }) => theme.primary};
   }
 `;
+
 
 const ButtonContainer = styled.div`
   width: 100%;
@@ -160,7 +162,7 @@ const Navbar = ({ openAuth, setOpenAuth, currentUser }) => {
         <NavItems>
           <Navlink to="/">Home</Navlink>
           <Navlink to="/Shop">Shop</Navlink>
-          <Navlink to="/New_Arrivals">New Arrivals</Navlink>
+          <Navlink to="/New_Arrivals" id="na">New Arrivals</Navlink>
           <Navlink to="/Orders">Orders</Navlink>
           <Navlink to="/Contact">Contact</Navlink>
         </NavItems>
@@ -183,6 +185,7 @@ const Navbar = ({ openAuth, setOpenAuth, currentUser }) => {
               Contact
             </Navlink>
             {currentUser ? (
+              
               <Button text="Logout" small onClick={() => dispatch(logout())} />
             ) : (
               <div
@@ -227,7 +230,9 @@ const Navbar = ({ openAuth, setOpenAuth, currentUser }) => {
                 src={currentUser?.img}
                 sx={{
                   color: "inherit",
-                  fontSize: "28px",
+                  fontSize: "20px",
+                  justifyContent:"center",
+                  alignItems:"center"
                 }}
               >
                 {currentUser?.name[0]}

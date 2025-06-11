@@ -13,6 +13,7 @@ import {
   getFavourite,
   getProductDetails,
 } from "../api";
+import ImageZoom from "../components/imageZoom";
 
 const Container = styled.div`
   display: flex;
@@ -40,13 +41,7 @@ const ImageWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const Image = styled.img`
-  height: 600px;
-  border-radius: 12px;
-  @media (max-width: 750px) {
-    height: 400px;
-  }
-`;
+
 
 const Details = styled.div`
   display: flex;
@@ -145,7 +140,8 @@ const ProductDetails = () => {
 
   const addFavorite = async () => {
     setFavoriteLoading(true);
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
+    console.log("hello");
     await addToFavourite(token, { productID: product?._id })
       .then((res) => {
         setFavorite(true);
@@ -163,7 +159,7 @@ const ProductDetails = () => {
   };
   const removeFavorite = async () => {
     setFavoriteLoading(true);
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
     await deleteFromFavourite(token, { productID: product?._id })
       .then((res) => {
         setFavorite(false);
@@ -181,7 +177,7 @@ const ProductDetails = () => {
   };
   const addCart = async () => {
     setCartLoading(true);
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
     await addToCart(token, { productId: product?._id, quantity: 1 })
       .then((res) => {
         setCartLoading(false);
@@ -199,7 +195,7 @@ const ProductDetails = () => {
   };
   const checkFavourite = async () => {
     setFavoriteLoading(true);
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
     await getFavourite(token, { productId: product?._id })
       .then((res) => {
         const isFavorite = res.data?.some(
@@ -231,7 +227,7 @@ const ProductDetails = () => {
       ) : (
         <Wrapper>
           <ImageWrapper>
-            <Image src={product?.img} />
+            <ImageZoom imgSrc={product?.img} />
           </ImageWrapper>
           <Details>
             <div>

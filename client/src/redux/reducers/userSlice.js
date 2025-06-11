@@ -13,11 +13,11 @@ export const userSlice = createSlice({
     },
     loginSuccess: (state, action) => {
       state.currentUser = action.payload.user;
-      localStorage.setItem("krist-app-token", action.payload.token);
+      localStorage.setItem("sibi-app-token", action.payload.token);
     },
     logout: (state) => {
       state.currentUser = null;
-      localStorage.removeItem("krist-app-token");
+      localStorage.removeItem("sibi-app-token");
     },
   },
 });

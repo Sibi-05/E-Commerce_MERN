@@ -11,6 +11,8 @@ import Cart from "./pages/Cart";
 import ProductDetails from "./pages/ProductDetails";
 import { useDispatch, useSelector } from "react-redux";
 import ToastMessage from "./components/ToastMessage";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const Container = styled.div`
   width: 100%;
@@ -26,6 +28,7 @@ const Container = styled.div`
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser)
   const { open, message, severity } = useSelector((state) => state.user);
   const [openAuth, setOpenAuth] = useState(false);
   return (
@@ -45,7 +48,9 @@ function App() {
           )}
           {open && (
             <ToastMessage open={open} message={message} severity={severity} />
+            
           )}
+          <ToastContainer />
         </Container>
       </BrowserRouter>
     </ThemeProvider>

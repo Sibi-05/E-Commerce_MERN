@@ -34,7 +34,7 @@ app.use("/api/products/", ProductRoutes);
 const connectDB = () => {
   mongoose.set("strictQuery", true);
   mongoose
-    .connect(process.env.MODNO_DB)
+    .connect(process.env.MONGODB_URI)
     .then(() => console.log("Connected to MONGO DB"))
     .catch((err) => {
       console.error("failed to connect with mongo");
@@ -45,7 +45,9 @@ const connectDB = () => {
 const startServer = async () => {
   try {
     connectDB();
-    app.listen(8080, () => console.log("Server started on port 8080"));
+    app.listen(process.env.PORT, () =>
+      console.log("Server started on port",process.env.PORT)
+    );
   } catch (error) {
     console.log(error);
   }

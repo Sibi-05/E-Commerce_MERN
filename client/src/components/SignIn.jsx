@@ -6,6 +6,8 @@ import { UserSignIn } from "../api";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/reducers/userSlice";
 import { openSnackbar } from "../redux/reducers/snackbarSlice";
+import { Toaster } from "./Toaster";
+
 
 const Container = styled.div`
   width: 100%;
@@ -37,7 +39,7 @@ const TextButton = styled.div`
   }
 `;
 
-const SignIn = () => {
+const SignIn = ({ setOpenAuth }) => {
   const dispatch = useDispatch();
   const [buttonLoading, setButtonLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -46,7 +48,7 @@ const SignIn = () => {
 
   const validateInputs = () => {
     if (!email || !password) {
-      alert("Please fill in all fields");
+     Toaster("error","Please fill in all fields");
       return false;
     }
     return true;
@@ -65,12 +67,18 @@ const SignIn = () => {
               severity: "success",
             })
           );
+          console.log(res.status)
+          if(res.status==200){
+            setOpenAuth(false);
+        }
+          Toaster("success",res.data.message);
         })
         .catch((err) => {
+          console.log(err);
           if (err.response) {
             setButtonLoading(false);
             setButtonDisabled(false);
-            alert(err.response.data.message);
+            Toaster("error",err.response.data.message);
             dispatch(
               openSnackbar({
                 message: err.response.data.message,
@@ -96,7 +104,7 @@ const SignIn = () => {
   return (
     <Container>
       <div>
-        <Title>Welcome to Krist 👋</Title>
+        <Title>Welcome to Mr_5_1_%_1 👋</Title>
         <Span>Please login with your details here</Span>
       </div>
       <div style={{ display: "flex", gap: "20px", flexDirection: "column" }}>

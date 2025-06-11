@@ -142,7 +142,7 @@ const ProductCard = ({ product }) => {
 
   const addFavorite = async () => {
     setFavoriteLoading(true);
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
     await addToFavourite(token, { productID: product?._id })
       .then((res) => {
         setFavorite(true);
@@ -160,7 +160,7 @@ const ProductCard = ({ product }) => {
   };
   const removeFavorite = async () => {
     setFavoriteLoading(true);
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
     await deleteFromFavourite(token, { productID: product?._id })
       .then((res) => {
         setFavorite(false);
@@ -177,7 +177,7 @@ const ProductCard = ({ product }) => {
       });
   };
   const addCart = async () => {
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
     await addToCart(token, { productId: product?._id, quantity: 1 })
       .then((res) => {
         navigate("/cart");
@@ -193,7 +193,7 @@ const ProductCard = ({ product }) => {
   };
   const checkFavourite = async () => {
     setFavoriteLoading(true);
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
     await getFavourite(token, { productId: product?._id })
       .then((res) => {
         const isFavorite = res.data?.some(

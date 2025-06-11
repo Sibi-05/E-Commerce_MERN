@@ -22,11 +22,24 @@ const Left = styled.div`
 `;
 
 const Logo = styled.img`
-  position: absolute;
+   position: absolute;
   top: 40px;
   left: 60px;
   z-index: 10;
+  width: 150px; /* Adjust the width for larger screens */
+  height: auto; /* Maintain aspect ratio */
+
+  @media screen and (max-width: 768px) {
+    width: 100px; /* Adjust the width for medium screens */
+  }
+
+  @media screen and (max-width: 480px) {
+    width: 80px; /* Adjust the width for small screens */
+    top: 20px; /* Adjust the top position for small screens */
+    left: 20px; /* Adjust the left position for small screens */
+  }
 `;
+
 const Image = styled.img`
   position: relative;
   height: 100%;

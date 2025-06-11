@@ -51,7 +51,7 @@ const Favourite = () => {
 
   const getProducts = async () => {
     setLoading(true);
-    const token = localStorage.getItem("krist-app-token");
+    const token = localStorage.getItem("sibi-app-token");
     await getFavourite(token).then((res) => {
       setProducts(res.data);
       setLoading(false);
