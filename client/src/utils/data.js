@@ -24,6 +24,11 @@ export const category = [
     name: "Ethnic Wear",
     off: "10-40% OFF",
   },
+  {
+    img: "https://pbs.twimg.com/media/GI237qbacAAw4gg?format=jpg&name=4096x4096",
+    name: "Kids Wear",
+    off: "10-40% OFF",
+  },
 ];
 
 export const filter = [

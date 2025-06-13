@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import LogoImg from "../utils/Images/Logo.png";
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { NavLink } from "react-router-dom";
 import Button from "./Button";
 import {
@@ -121,7 +122,7 @@ const MobileMenu = styled.ul`
   list-style: none;
   width: 80%;
   padding: 12px 40px 24px 40px;
-  background: ${({ theme }) => theme.card_light + 99};
+  background: white;
   position: absolute;
   top: 80px;
   right: 0;
@@ -162,7 +163,7 @@ const Navbar = ({ openAuth, setOpenAuth, currentUser }) => {
         <NavItems>
           <Navlink to="/">Home</Navlink>
           <Navlink to="/Shop">Shop</Navlink>
-          <Navlink to="/New_Arrivals" id="na">New Arrivals</Navlink>
+          <Navlink to="/New_Arrivals">New Arrivals</Navlink>
           <Navlink to="/Orders">Orders</Navlink>
           <Navlink to="/Contact">Contact</Navlink>
         </NavItems>
@@ -271,7 +272,8 @@ const Navbar = ({ openAuth, setOpenAuth, currentUser }) => {
               >
                 {currentUser?.name[0]}
               </Avatar>
-              <TextButton onClick={() => dispatch(logout())}>Logout</TextButton>
+            
+              <TextButton onClick={() => dispatch(logout())}><LogoutRoundedIcon sx={{display:"flex",color:"red",fontSize: "30px"}} /> </TextButton>
             </>
           ) : (
             <Button

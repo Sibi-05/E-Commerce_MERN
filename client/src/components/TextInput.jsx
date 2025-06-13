@@ -81,9 +81,17 @@ const Input = styled.input`
   border: none;
   background-color: transparent;
   color: ${({ theme }) => theme.primary};
-  &:focus {
-    outline: none;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+
   ${({ small }) =>
     small &&
     `
@@ -94,8 +102,9 @@ const Input = styled.input`
     popup &&
     `
   color: ${theme.popup_text_secondary};
-  `} ${({ theme }) => theme.popup_text_secondary};
+  `}
 `;
+
 
 const Error = styled.p`
   font-size: 12px;
@@ -144,6 +153,9 @@ const TextInput = ({
   small,
   popup,
   password,
+  type,
+  maxLength,
+  minLength 
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
@@ -161,7 +173,7 @@ const TextInput = ({
         {chipableInput ? (
           <ChipWrapper>
             {chipableArray.map((chip, index) => (
-              <Chip key={index}>
+              <Chip key={index+1}>
                 <span>{chip}</span>
                 <CloseRounded
                   sx={{ fontSize: "14px" }}
@@ -181,6 +193,8 @@ const TextInput = ({
             <Input
               popup={popup}
               small={small}
+              maxlength={maxLength}
+              minlength={minLength}
               as={textArea ? "textarea" : "input"}
               name={name}
               rows={rows}
@@ -188,7 +202,14 @@ const TextInput = ({
               placeholder={placeholder}
               value={value}
               onChange={(e) => handelChange(e)}
-              type={password && !showPassword ? "password" : "text"}
+              type={
+                   password
+                  ? showPassword
+                  ? "text"
+                  : "password"
+                 : type || "text"
+              }
+
             />
             {password && (
               <>

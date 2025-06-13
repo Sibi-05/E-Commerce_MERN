@@ -94,7 +94,8 @@ export const UserLogin = async (req, res, next) => {
 // Cart
 export const addToCart = async (req, res, next) => {
   try {
-    const { productId, quantity } = req.body;
+    const { productId, quantity, size } = req.body;
+    const pSize=size
     const userJWT = req.user;
     const user = await User.findById(userJWT.id);
     const existingCartItemIndex = user.cart.findIndex((item) =>
@@ -105,10 +106,10 @@ export const addToCart = async (req, res, next) => {
       user.cart[existingCartItemIndex].quantity += quantity;
     } else {
       // Product is not in the cart, add it
-      user.cart.push({ product: productId, quantity });
+      user.cart.push({ product: productId, quantity, size:pSize });
     }
     await user.save();
-
+console.log("😇😇",user);
     return res
       .status(200)
       .json({ message: "Product added to cart successfully", user });
@@ -170,7 +171,14 @@ export const placeOrder = async (req, res, next) => {
   try {
     const { products, address, totalAmount } = req.body;
     const userJWT = req.user;
+
+    // Fetch the user
     const user = await User.findById(userJWT.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+
     const order = new Orders({
       products,
       user: user._id,
@@ -179,14 +187,18 @@ export const placeOrder = async (req, res, next) => {
     });
     await order.save();
 
-    user.cart.save();
+    
+    if (Array.isArray(user.orders)) {
+      user.orders.push(order._id); 
+    }
 
+    // Clear user's cart
     user.cart = [];
+
+    // Save updated user
     await user.save();
 
-    return res
-      .status(200)
-      .json({ message: "Order placed successfully", order });
+    return res.status(200).json({ message: "Order placed successfully", order });
   } catch (err) {
     next(err);
   }

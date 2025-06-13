@@ -14,20 +14,16 @@ const Container = styled.div`
   gap: 30px;
   @media (max-width: 768px) {
     padding: 20px 12px;
-    flex-direction: column;
-    overflow-y: scroll;
   }
   background: ${({ theme }) => theme.bg};
 `;
 const Filters = styled.div`
   width: 100%;
   height: fit-content;
-  overflow-y: hidden;
   padding: 20px 16px;
   @media (min-width: 768px) {
     height: 100%;
     width: 230px;
-    overflow-y: scroll;
   }
 `;
 const FilterSection = styled.div`
@@ -62,10 +58,19 @@ const CardWrapper = styled.div`
   justify-content: center;
   @media (max-width: 750px) {
     gap: 14px;
+    height:900px;
+    overflow:scroll;
   }
 `;
 
 const Item = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  height:200px;
+  overflow-y:scroll;
+`;
+const SItem = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -149,7 +154,7 @@ const ShopListing = () => {
                       />
                     </>
                   ) : filters.value === "size" ? (
-                    <Item>
+                    <SItem>
                       {filters.items.map((item) => (
                         <SelectableItem
                           key={item}
@@ -167,7 +172,7 @@ const ShopListing = () => {
                           {item}
                         </SelectableItem>
                       ))}
-                    </Item>
+                    </SItem>
                   ) : filters.value === "category" ? (
                     <Item>
                       {filters.items.map((item) => (

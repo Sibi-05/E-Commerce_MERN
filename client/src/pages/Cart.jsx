@@ -8,6 +8,7 @@ import { CircularProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../redux/reducers/snackbarSlice";
 import { DeleteOutline } from "@mui/icons-material";
+import {Toaster} from "../components/Toaster";
 
 const Container = styled.div`
   padding: 20px 30px;
@@ -146,11 +147,19 @@ const Cart = () => {
     phoneNumber: "",
     completeAddress: "",
   });
+  const [paymentDetails, setPaymentDetails] = useState({
+  cardNumber: "",
+  expiryDate: "",
+  cvv: "",
+  cardHolder: "",
+});
+
 
   const getProducts = async () => {
     setLoading(true);
     const token = localStorage.getItem("sibi-app-token");
     await getCart(token).then((res) => {
+      console.log(products);
       setProducts(res.data);
       setLoading(false);
     });
@@ -223,6 +232,7 @@ const Cart = () => {
 
       if (!isDeliveryDetailsFilled) {
         // Show an error message or handle the situation where delivery details are incomplete
+        Toaster("error","Please fill in all required delivery details");
         dispatch(
           openSnackbar({
             message: "Please fill in all required delivery details.",
@@ -238,10 +248,10 @@ const Cart = () => {
         address: convertAddressToString(deliveryDetails),
         totalAmount,
       };
-
-      await placeOrder(token, orderDetails);
-
+      console.log(orderDetails);
+      const res = await placeOrder(token, orderDetails);
       // Show success message or navigate to a success page
+      Toaster("success",res.data.message);
       dispatch(
         openSnackbar({
           message: "Order placed successfully",
@@ -262,6 +272,7 @@ const Cart = () => {
       setButtonLoad(false);
     }
   };
+  console.log(products);
   return (
     <Container>
       {loading ? (
@@ -291,7 +302,7 @@ const Cart = () => {
                         <Details>
                           <Protitle>{item?.product?.title}</Protitle>
                           <ProDesc>{item?.product?.name}</ProDesc>
-                          <ProSize>Size: Xl</ProSize>
+                          <ProSize>Size : {item?.size}</ProSize>
                         </Details>
                       </Product>
                     </TableItem>
@@ -389,6 +400,9 @@ const Cart = () => {
                     />
                     <TextInput
                       small
+                      type="number"
+                      maxLength="10"
+                      minLength="10"
                       value={deliveryDetails.phoneNumber}
                       handelChange={(e) =>
                         setDeliveryDetails({
@@ -416,21 +430,65 @@ const Cart = () => {
                 <Delivery>
                   Payment Details:
                   <div>
-                    <TextInput small placeholder="Card Number" />
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "6px",
-                      }}
-                    >
-                      <TextInput small placeholder="Expiry Date" />
-                      <TextInput small placeholder="CVV" />
-                    </div>
-                    <TextInput small placeholder="Card Holder name" />
+                  <TextInput
+  small
+  type="number"
+  maxLength="16"
+  placeholder="Card Number"
+  value={paymentDetails.cardNumber}
+  handelChange={(e) =>
+    setPaymentDetails({
+      ...paymentDetails,
+      cardNumber: e.target.value,
+    })
+  }
+/>
+
+<div style={{ display: "flex",gap: "6px", alignItems:"center" }}>
+    <p style={{ display: "flex",fontSize:"15px",marginBottom:"5px", padding:"0px"}}>Expiry Date:</p>
+  <TextInput
+    small
+    placeholder="Expiry Date"
+    type="date"
+    value={paymentDetails.expiryDate}
+    handelChange={(e) =>
+      setPaymentDetails({
+        ...paymentDetails,
+        expiryDate: e.target.value,
+      })
+    }
+  />
+  <TextInput
+    small
+    type="number"
+    maxlength="3"
+    placeholder="XXXXXXXCVV"
+    value={paymentDetails.cvv}
+    handelChange={(e) =>
+      setPaymentDetails({
+        ...paymentDetails,
+        cvv: e.target.value,
+      })
+    }
+  />
+</div>
+
+<TextInput
+  small
+  placeholder="Card Holder name"
+  value={paymentDetails.cardHolder}
+  handelChange={(e) =>
+    setPaymentDetails({
+      ...paymentDetails,
+      cardHolder: e.target.value,
+    })
+  }
+/>
+
                   </div>
                 </Delivery>
                 <Button
-                  text="Pace Order"
+                  text="Place Order"
                   small
                   isLoading={buttonLoad}
                   isDisabled={buttonLoad}

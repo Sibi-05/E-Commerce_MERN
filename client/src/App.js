@@ -8,6 +8,7 @@ import Authentication from "./pages/Authentication";
 import ShopListing from "./pages/ShopListing";
 import Favourite from "./pages/Favourite";
 import Cart from "./pages/Cart";
+import Orders from "./pages/Orders";
 import ProductDetails from "./pages/ProductDetails";
 import { useDispatch, useSelector } from "react-redux";
 import ToastMessage from "./components/ToastMessage";
@@ -41,6 +42,7 @@ function App() {
             <Route path="/shop" exact element={<ShopListing />} />
             <Route path="/favorite" exact element={<Favourite />} />
             <Route path="/cart" exact element={<Cart />} />
+            <Route path="/orders" exact element={<Orders />} />
             <Route path="/shop/:id" exact element={<ProductDetails />} />
           </Routes>
           {openAuth && (

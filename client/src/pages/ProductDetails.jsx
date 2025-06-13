@@ -137,7 +137,6 @@ const ProductDetails = () => {
       setLoading(false);
     });
   };
-
   const addFavorite = async () => {
     setFavoriteLoading(true);
     const token = localStorage.getItem("sibi-app-token");
@@ -178,7 +177,7 @@ const ProductDetails = () => {
   const addCart = async () => {
     setCartLoading(true);
     const token = localStorage.getItem("sibi-app-token");
-    await addToCart(token, { productId: product?._id, quantity: 1 })
+    await addToCart(token, { productId: product?._id, quantity: 1,size: selected })
       .then((res) => {
         setCartLoading(false);
         navigate("/cart");
@@ -244,10 +243,10 @@ const ProductDetails = () => {
               <Items>
                 {product?.sizes.map((size) => (
                   <Item
-                    selected={selected === size}
-                    onClick={() => setSelected(size)}
-                  >
-                    {size}
+                   selected={selected === size}
+                   onClick={() => setSelected(size)}
+                   >
+                      {size}
                   </Item>
                 ))}
               </Items>

@@ -54,7 +54,7 @@ export const placeOrder = async (token, data) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const getOrders = async (token) =>
+export const getAllOrders = async (token) =>
   await API.get(`/user/order/`, {
     headers: { Authorization: `Bearer ${token}` },
   });

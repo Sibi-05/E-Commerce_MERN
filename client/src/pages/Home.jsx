@@ -52,6 +52,33 @@ const CardWrapper = styled.div`
   }
 `;
 
+const MarqueeWrapper = styled.div`
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+`;
+
+const MarqueeContent = styled.div`
+  display: flex;
+  gap: 24px;
+  animation: marquee 25s linear infinite;
+  width: fit-content;
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  &:hover {
+    animation-play-state: paused;
+  }
+`;
+
+
 const Home = () => {
 
   const [loading, setLoading] = useState(false);
@@ -81,16 +108,21 @@ const Home = () => {
       <Section>
         <Title>Shop by Categories</Title>
         <CardWrapper>
-          {category.map((category) => (
-            <ProductCategoryCard category={category} />
-          ))}
+         <MarqueeWrapper>
+  <MarqueeContent>
+    {category.concat(category).map((cat, idx) => (
+      <ProductCategoryCard key={idx+1} category={cat} />
+    ))}
+  </MarqueeContent>
+</MarqueeWrapper>
+
         </CardWrapper>
       </Section>
       <Section>
         <Title center>Our Bestseller</Title>
         <CardWrapper>
           {products.map((product) => (
-            <ProductCard product={product} />
+            <ProductCard product={product}/>
           ))}
         </CardWrapper>
       </Section>
