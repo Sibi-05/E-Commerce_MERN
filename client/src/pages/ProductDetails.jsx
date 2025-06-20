@@ -14,6 +14,7 @@ import {
   getProductDetails,
 } from "../api";
 import ImageZoom from "../components/imageZoom";
+import {Toaster} from "../components/Toaster"
 
 const Container = styled.div`
   display: flex;
@@ -180,6 +181,7 @@ const ProductDetails = () => {
     await addToCart(token, { productId: product?._id, quantity: 1,size: selected })
       .then((res) => {
         setCartLoading(false);
+        Toaster("success","Added to the Cart");
         navigate("/cart");
       })
       .catch((err) => {
@@ -192,6 +194,9 @@ const ProductDetails = () => {
         );
       });
   };
+  const handleBuy=()=>{
+       Toaster("info","Add the Item into the Cart")
+  }
   const checkFavourite = async () => {
     setFavoriteLoading(true);
     const token = localStorage.getItem("sibi-app-token");
@@ -233,7 +238,7 @@ const ProductDetails = () => {
               <Title>{product?.title}</Title>
               <Name>{product?.name}</Name>
             </div>
-            <Rating value={3.5} />
+            <Rating readOnly value={3.5} />
             <Price>
               ${product?.price?.org} <Span>${product?.price?.mrp}</Span>{" "}
               <Percent> (${product?.price?.off}% Off) </Percent>
@@ -259,7 +264,7 @@ const ProductDetails = () => {
                 isLoading={cartLoading}
                 onClick={() => addCart()}
               />
-              <Button text="Buy Now" full />
+              <Button text="Buy Now" full onClick={handleBuy} />
               <Button
                 leftIcon={
                   favorite ? (

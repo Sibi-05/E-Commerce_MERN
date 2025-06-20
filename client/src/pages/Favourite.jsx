@@ -75,8 +75,8 @@ const Favourite = () => {
                 <>No Products</>
               ) : (
                 <CardWrapper>
-                  {products.map((product) => (
-                    <ProductCard product={product} />
+                  {products.map((product,key) => (
+                    <ProductCard product={product} key={key+1}/>
                   ))}
                 </CardWrapper>
               )}

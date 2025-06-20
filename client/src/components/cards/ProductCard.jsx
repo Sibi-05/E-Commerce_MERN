@@ -15,6 +15,7 @@ import {
 } from "../../api";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../redux/reducers/snackbarSlice";
+import { Toaster } from "../Toaster";
 
 const Card = styled.div`
   width: 250px;
@@ -180,6 +181,7 @@ const ProductCard = ({ product }) => {
     const token = localStorage.getItem("sibi-app-token");
     await addToCart(token, { productId: product?._id, quantity: 1 })
       .then((res) => {
+        Toaster("success","Added to the Cart");
         navigate("/cart");
       })
       .catch((err) => {
@@ -243,7 +245,7 @@ const ProductCard = ({ product }) => {
           </MenuItem>
         </Menu>
         <Rate>
-          <Rating value={3.5} sx={{ fontSize: "14px" }} />
+          <Rating readOnly value={3.5} sx={{ fontSize: "14px" }} />
         </Rate>
       </Top>
       <Details onClick={() => navigate(`/shop/${product._id}`)}>

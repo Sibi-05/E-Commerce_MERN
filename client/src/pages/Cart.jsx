@@ -8,7 +8,9 @@ import { CircularProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../redux/reducers/snackbarSlice";
 import { DeleteOutline } from "@mui/icons-material";
-import {Toaster} from "../components/Toaster";
+import { Toaster } from "../components/Toaster";
+
+// Styled Components
 
 const Container = styled.div`
   padding: 20px 30px;
@@ -19,11 +21,12 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 30px;
+  background: ${({ theme }) => theme.bg};
   @media (max-width: 768px) {
     padding: 20px 12px;
   }
-  background: ${({ theme }) => theme.bg};
 `;
+
 const Section = styled.div`
   width: 100%;
   max-width: 1400px;
@@ -34,12 +37,17 @@ const Section = styled.div`
   font-size: 22px;
   gap: 28px;
 `;
+
 const Title = styled.div`
   font-size: 28px;
   font-weight: 500;
   display: flex;
   justify-content: ${({ center }) => (center ? "center" : "space-between")};
   align-items: center;
+
+  @media (max-width: 630px) {
+    font-size: 22px;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -50,7 +58,12 @@ const Wrapper = styled.div`
   @media (max-width: 750px) {
     flex-direction: column;
   }
+  @media (max-width: 630px) {
+    gap: 16px;
+    padding: 8px;
+  }
 `;
+
 const Left = styled.div`
   flex: 1;
   display: flex;
@@ -60,20 +73,76 @@ const Left = styled.div`
     flex: 1.2;
   }
 `;
+
 const Table = styled.div`
   font-size: 16px;
   display: flex;
   align-items: center;
   gap: 30px;
-  ${({ head }) => head && `margin-bottom: 22px`}
+  position: relative;
+
+  ${({ head }) => head && `margin-bottom: 22px;`}
+  
+  @media (max-width: 630px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border: 1px solid ${({ theme }) => theme.text_secondary + 40};
+    padding: 16px;
+    border-radius: 12px;
+    width: 95%;
+    position: relative;
+    background: ${({ theme }) => theme.bg_secondary || "#fff"};
+  }
 `;
+
+const TableH = styled.div`
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  ${({ head }) => head && `margin-bottom: 22px;`}
+  @media (max-width: 630px) {
+  display:none;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    border: 1px solid ${({ theme }) => theme.text_secondary + 40};
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+  }
+`;
+
 const TableItem = styled.div`
-  ${({ flex }) => flex && `flex: 1; `}
-  ${({ bold }) =>
-    bold &&
-    `font-weight: 600; 
-  font-size: 18px;`}
+  ${({ flex }) => flex && `flex: 1;`}
+  ${({ bold }) => bold && `font-weight: 600; font-size: 18px;`}
+  @media (max-width: 630px) {
+    // width: 100%;
+    font-size: 14px;
+  }
 `;
+const TableItemP = styled.div`
+  ${({ flex }) => flex && `flex: 1;`}
+  ${({ bold }) => bold && `font-weight: 600; font-size: 18px;`}
+  @media (max-width: 630px) {
+    display:none;
+    font-size: 14px;
+  }
+`;
+const DTableItem = styled.div`
+  ${({ flex }) => flex && `flex: 1;`}
+  ${({ bold }) => bold && `font-weight: 600; font-size: 18px;`}
+
+  @media (max-width: 630px) {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: block;
+    cursor: pointer;
+  }
+`;
+
 const Counter = styled.div`
   display: flex;
   gap: 12px;
@@ -86,16 +155,26 @@ const Counter = styled.div`
 const Product = styled.div`
   display: flex;
   gap: 16px;
+  @media (max-width: 630px) {
+    flex-direction: row;
+  }
 `;
+
 const Img = styled.img`
   height: 80px;
+  @media (max-width: 630px) {
+    height: 60px;
+  }
 `;
+
 const Details = styled.div``;
+
 const Protitle = styled.div`
   color: ${({ theme }) => theme.primary};
   font-size: 16px;
   font-weight: 500;
 `;
+
 const ProDesc = styled.div`
   font-size: 14px;
   font-weight: 400;
@@ -104,6 +183,7 @@ const ProDesc = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+
 const ProSize = styled.div`
   font-size: 14px;
   font-weight: 500;
@@ -118,12 +198,18 @@ const Right = styled.div`
     flex: 0.8;
   }
 `;
+
 const Subtotal = styled.div`
   font-size: 22px;
   font-weight: 600;
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 630px) {
+    font-size: 18px;
+  }
 `;
+
 const Delivery = styled.div`
   font-size: 18px;
   font-weight: 500;
@@ -131,6 +217,8 @@ const Delivery = styled.div`
   gap: 6px;
   flex-direction: column;
 `;
+
+// Main Component
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -147,60 +235,50 @@ const Cart = () => {
     phoneNumber: "",
     completeAddress: "",
   });
-  const [paymentDetails, setPaymentDetails] = useState({
-  cardNumber: "",
-  expiryDate: "",
-  cvv: "",
-  cardHolder: "",
-});
 
+  const [paymentDetails, setPaymentDetails] = useState({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    cardHolder: "",
+  });
 
   const getProducts = async () => {
     setLoading(true);
     const token = localStorage.getItem("sibi-app-token");
     await getCart(token).then((res) => {
-      console.log(products);
       setProducts(res.data);
       setLoading(false);
     });
   };
 
-  const addCart = async (id) => {
-    const token = localStorage.getItem("sibi-app-token");
-    await addToCart(token, { productId: id, quantity: 1 })
-      .then((res) => {
-        setReload(!reload);
-      })
-      .catch((err) => {
-        setReload(!reload);
-        dispatch(
-          openSnackbar({
-            message: err.message,
-            severity: "error",
-          })
-        );
-      });
-  };
+const addCart = async (id) => {
+  const token = localStorage.getItem("sibi-app-token");
+  const currentItem = products.find((item) => item.product._id === id);
+
+  if (currentItem?.quantity >= 10) {
+    dispatch(openSnackbar({ message: "Maximum quantity is 10", severity: "warning" }));
+    return;
+  }
+
+  await addToCart(token, { productId: id, quantity: 1 })
+    .then(() => setReload(!reload))
+    .catch((err) => {
+      setReload(!reload);
+      dispatch(openSnackbar({ message: err.message, severity: "error" }));
+    });
+};
+
 
   const removeCart = async (id, quantity, type) => {
     const token = localStorage.getItem("sibi-app-token");
     let qnt = quantity > 0 ? 1 : null;
     if (type === "full") qnt = null;
-    await deleteFromCart(token, {
-      productId: id,
-      quantity: qnt,
-    })
-      .then((res) => {
-        setReload(!reload);
-      })
+    await deleteFromCart(token, { productId: id, quantity: qnt })
+      .then(() => setReload(!reload))
       .catch((err) => {
         setReload(!reload);
-        dispatch(
-          openSnackbar({
-            message: err.message,
-            severity: "error",
-          })
-        );
+        dispatch(openSnackbar({ message: err.message, severity: "error" }));
       });
   };
 
@@ -216,7 +294,6 @@ const Cart = () => {
   }, [reload]);
 
   const convertAddressToString = (addressObj) => {
-    // Convert the address object to a string representation
     return `${addressObj.firstName} ${addressObj.lastName}, ${addressObj.completeAddress}, ${addressObj.phoneNumber}, ${addressObj.emailAddress}`;
   };
 
@@ -231,16 +308,17 @@ const Cart = () => {
         deliveryDetails.emailAddress;
 
       if (!isDeliveryDetailsFilled) {
-        // Show an error message or handle the situation where delivery details are incomplete
-        Toaster("error","Please fill in all required delivery details");
+        Toaster("error", "Please fill in all required delivery details");
         dispatch(
           openSnackbar({
             message: "Please fill in all required delivery details.",
             severity: "error",
           })
         );
+        setButtonLoad(false);
         return;
       }
+
       const token = localStorage.getItem("sibi-app-token");
       const totalAmount = calculateSubtotal().toFixed(2);
       const orderDetails = {
@@ -248,10 +326,9 @@ const Cart = () => {
         address: convertAddressToString(deliveryDetails),
         totalAmount,
       };
-      console.log(orderDetails);
+
       const res = await placeOrder(token, orderDetails);
-      // Show success message or navigate to a success page
-      Toaster("success",res.data.message);
+      Toaster("success", res.data.message);
       dispatch(
         openSnackbar({
           message: "Order placed successfully",
@@ -259,10 +336,8 @@ const Cart = () => {
         })
       );
       setButtonLoad(false);
-      // Clear the cart and update the UI
       setReload(!reload);
     } catch (error) {
-      // Handle errors, show error message, etc.
       dispatch(
         openSnackbar({
           message: "Failed to place order. Please try again.",
@@ -272,7 +347,7 @@ const Cart = () => {
       setButtonLoad(false);
     }
   };
-  console.log(products);
+
   return (
     <Container>
       {loading ? (
@@ -285,17 +360,15 @@ const Cart = () => {
           ) : (
             <Wrapper>
               <Left>
-                <Table>
-                  <TableItem bold flex>
-                    Product
-                  </TableItem>
+                <TableH head>
+                  <TableItem bold flex>Product</TableItem>
                   <TableItem bold>Price</TableItem>
                   <TableItem bold>Quantity</TableItem>
                   <TableItem bold>Subtotal</TableItem>
                   <TableItem></TableItem>
-                </Table>
-                {products?.map((item) => (
-                  <Table>
+                </TableH>
+                {products.map((item) => (
+                  <Table key={item?.product?._id}>
                     <TableItem flex>
                       <Product>
                         <Img src={item?.product?.img} />
@@ -310,10 +383,7 @@ const Cart = () => {
                     <TableItem>
                       <Counter>
                         <div
-                          style={{
-                            cursor: "pointer",
-                            flex: 1,
-                          }}
+                          style={{ cursor: "pointer", flex: 1 }}
                           onClick={() =>
                             removeCart(item?.product?._id, item?.quantity - 1)
                           }
@@ -322,23 +392,26 @@ const Cart = () => {
                         </div>
                         {item?.quantity}
                         <div
-                          style={{
-                            cursor: "pointer",
-                            flex: 1,
-                          }}
-                          onClick={() => addCart(item?.product?._id)}
-                        >
-                          +
-                        </div>
+  style={{
+    cursor: item.quantity >= 10 ? "not-allowed" : "pointer",
+    flex: 1,
+    opacity: item.quantity >= 10 ? 0.4 : 1,
+  }}
+  onClick={() => {
+    if (item.quantity < 10) addCart(item?.product?._id);
+  }}
+>
+  +
+</div>
+
                       </Counter>
                     </TableItem>
-                    <TableItem>
-                      {" "}
+                    <TableItemP>
                       ${(item.quantity * item?.product?.price?.org).toFixed(2)}
-                    </TableItem>
-                    <TableItem>
+                    </TableItemP>
+                    <DTableItem>
                       <DeleteOutline
-                        sx={{ color: "red" }}
+                        sx={{ color: "red"}}
                         onClick={() =>
                           removeCart(
                             item?.product?._id,
@@ -347,23 +420,16 @@ const Cart = () => {
                           )
                         }
                       />
-                    </TableItem>
+                    </DTableItem>
                   </Table>
                 ))}
               </Left>
               <Right>
-                <Subtotal>
-                  Subtotal : ${calculateSubtotal().toFixed(2)}
-                </Subtotal>
+                <Subtotal>Subtotal: ${calculateSubtotal().toFixed(2)}</Subtotal>
                 <Delivery>
                   Delivery Details:
                   <div>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "6px",
-                      }}
-                    >
+                    <div style={{ display: "flex", gap: "6px" }}>
                       <TextInput
                         small
                         placeholder="First Name"
@@ -401,8 +467,6 @@ const Cart = () => {
                     <TextInput
                       small
                       type="number"
-                      maxLength="10"
-                      minLength="10"
                       value={deliveryDetails.phoneNumber}
                       handelChange={(e) =>
                         setDeliveryDetails({
@@ -416,75 +480,70 @@ const Cart = () => {
                       small
                       textArea
                       rows="5"
+                      value={deliveryDetails.completeAddress}
                       handelChange={(e) =>
                         setDeliveryDetails({
                           ...deliveryDetails,
                           completeAddress: e.target.value,
                         })
                       }
-                      value={deliveryDetails.completeAddress}
-                      placeholder="Complete Address (Address, State, Country, Pincode)"
+                      placeholder="Complete Address"
                     />
                   </div>
                 </Delivery>
                 <Delivery>
                   Payment Details:
                   <div>
-                  <TextInput
-  small
-  type="number"
-  maxLength="16"
-  placeholder="Card Number"
-  value={paymentDetails.cardNumber}
-  handelChange={(e) =>
-    setPaymentDetails({
-      ...paymentDetails,
-      cardNumber: e.target.value,
-    })
-  }
-/>
-
-<div style={{ display: "flex",gap: "6px", alignItems:"center" }}>
-    <p style={{ display: "flex",fontSize:"15px",marginBottom:"5px", padding:"0px"}}>Expiry Date:</p>
-  <TextInput
-    small
-    placeholder="Expiry Date"
-    type="date"
-    value={paymentDetails.expiryDate}
-    handelChange={(e) =>
-      setPaymentDetails({
-        ...paymentDetails,
-        expiryDate: e.target.value,
-      })
-    }
-  />
-  <TextInput
-    small
-    type="number"
-    maxlength="3"
-    placeholder="XXXXXXXCVV"
-    value={paymentDetails.cvv}
-    handelChange={(e) =>
-      setPaymentDetails({
-        ...paymentDetails,
-        cvv: e.target.value,
-      })
-    }
-  />
-</div>
-
-<TextInput
-  small
-  placeholder="Card Holder name"
-  value={paymentDetails.cardHolder}
-  handelChange={(e) =>
-    setPaymentDetails({
-      ...paymentDetails,
-      cardHolder: e.target.value,
-    })
-  }
-/>
-
+                    <TextInput
+                      small
+                      type="number"
+                      placeholder="Card Number"
+                      value={paymentDetails.cardNumber}
+                      handelChange={(e) =>
+                        setPaymentDetails({
+                          ...paymentDetails,
+                          cardNumber: e.target.value,
+                        })
+                      }
+                    />
+                    <div style={{ display: "flex", gap: "6px",alignItems:"center" }}>
+                      <p style={{ fontSize:"13px",display: "flex", gap: "6px",alignItems:"center" }}>Expiry Date : </p>
+                      <TextInput
+                        small
+                        placeholder="Expiry Date"
+                        type="date"
+                        value={paymentDetails.expiryDate}
+                        handelChange={(e) =>
+                          setPaymentDetails({
+                            ...paymentDetails,
+                            expiryDate: e.target.value,
+                          })
+                        }
+                      />
+                      <TextInput
+                        small
+                        type="number"
+                        placeholder="CVV"
+                        value={paymentDetails.cvv}
+                        handelChange={(e) =>
+                          setPaymentDetails({
+                            ...paymentDetails,
+                            cvv: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <TextInput
+                      small
+                      placeholder="Card Holder name"
+                      value={paymentDetails.cardHolder}
+                      handelChange={(e) =>
+                        setPaymentDetails({
+                          ...paymentDetails,
+                          cardHolder: e.target.value,
+                        })
+                      }
+                    />
                   </div>
                 </Delivery>
                 <Button

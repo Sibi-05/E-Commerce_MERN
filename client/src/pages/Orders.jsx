@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components"; // Import keyframes for animations
 import { CircularProgress } from "@mui/material";
 import { getAllOrders, getProductDetails } from "../api";
-import { formatDistanceStrict } from "date-fns";
+import { formatDistanceStrict } from "date-fns"; // For time ago display
 
+// --- Styled Components ---
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 const Container = styled.div`
   padding: 20px 30px 200px;
@@ -17,13 +29,6 @@ const Container = styled.div`
     padding: 20px 12px;
   }
 `;
-const TimeAgo = styled.div`
-  font-size: 13px;
-  color: ${({ theme }) => theme.textSecondary};
-  align-self: flex-start;
-  margin-top: 8px;
-`;
-
 
 const Section = styled.div`
   max-width: 1000px;
@@ -34,81 +39,144 @@ const Section = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 32px; /* Slightly larger title */
+  font-weight: 700; /* Bolder title */
   text-align: center;
+  color: ${({ theme }) => theme.text}; /* Ensure title color is consistent */
+  margin-bottom: 20px;
 `;
 
 const OrderCard = styled.div`
   background: ${({ theme }) => theme.card};
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 25px; /* Increased padding for more breathing room */
+  border-radius: 16px; /* Slightly more rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* More prominent shadow */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px; /* Increased gap */
+  transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+  &:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+  }
+`;
+
+const OrderSummary = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid for order info */
+  gap: 10px 20px; /* Gap between grid items */
+  font-size: 15px;
+  color: ${({ theme }) => theme.text_secondary};
+  strong {
+    color: ${({ theme }) => theme.text}; /* Make strong text more prominent */
+  }
 `;
 
 const OrderInfo = styled.div`
-  font-size: 14px;
-  color: ${({ theme }) => theme.textSecondary};
+  display: flex;
+  flex-direction: column;
+  span {
+    font-weight: 500;
+    color: ${({ theme }) => theme.text};
+  }
+`;
+
+const TimeAgo = styled.div`
+  font-size: 13px;
+  color: ${({ theme }) => theme.text_secondary};
+  align-self: flex-start; /* Align to start in flex column */
+  margin-top: 5px;
 `;
 
 const ToggleButton = styled.button`
-  background: none;
+  background: ${({ theme }) => theme.primary + "15"}; /* Light background from theme */
   border: none;
-  color: ${({ theme }) => theme.text};
-  font-weight: 500;
+  color: ${({ theme }) => theme.primary}; /* Primary color for text */
+  font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   align-self: flex-end;
-  padding: 6px 0;
+  padding: 8px 15px; /* More padding */
+  border-radius: 8px; /* Rounded button */
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background: ${({ theme }) => theme.primary + "30"}; /* Darker on hover */
+  }
+  &:active {
+    transform: translateY(1px); /* Click effect */
+  }
+`;
+
+const ProductList = styled.div`
+  animation: ${fadeIn} 0.5s ease-out; /* Fade-in animation for product list */
+  border-top: 1px solid ${({ theme }) => theme.text_secondary + "20"}; /* Lighter separator */
+  padding-top: 15px;
+  margin-top: 10px;
 `;
 
 const ProductItem = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 12px 0;
-  border-top: 1px solid #e0e0e0;
-  margin-top: 10px;
-  flex-wrap: wrap;
+  align-items: center; /* Center align items */
+  gap: 20px; /* Increased gap */
+  padding: 15px 0;
+  border-bottom: 1px solid ${({ theme }) => theme.text_secondary + "10"}; /* Subtle separator */
+  &:last-child {
+    border-bottom: none; /* No border for the last item */
+  }
+  @media (max-width: 600px) {
+    flex-direction: column; /* Stack on smaller screens */
+    align-items: flex-start;
+  }
 `;
 
 const ProductDetails = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px; /* Increased gap */
   flex: 1;
 `;
 
 const ProductTitle = styled.div`
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px; /* Slightly larger product title */
+  font-weight: 600;
+  color: ${({ theme }) => theme.text};
+`;
+
+const ProductInfo = styled.div`
+  font-size: 14px;
+  color: ${({ theme }) => theme.text_secondary};
 `;
 
 const Image = styled.img`
-  width: 160px;
-  height: 120px;
-  border-radius: 6px;
+  min-width: 120px; /* Ensure minimum width for image */
+  height: 90px;
+  border-radius: 8px; /* More rounded image corners */
   object-fit: cover;
-  transition: all 0.3s ease-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Slight shadow for images */
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.02); /* Slight zoom on hover */
+  }
 
   @media (max-width: 900px) {
-    width: 140px;
+    min-width: 100px;
+    height: 80px;
   }
-
   @media (max-width: 600px) {
-    width: 120px;
-    height: 100px;
-  }
-
-  @media (max-width: 400px) {
-    width: 100px;
-    height: 90px;
+    min-width: 100%; /* Full width on small screens */
+    height: 150px;
   }
 `;
+
+const EmptyOrders = styled.div`
+  font-size: 18px;
+  color: ${({ theme }) => theme.text_secondary};
+  text-align: center;
+  margin-top: 50px;
+`;
+
+// --- Orders Component ---
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -122,21 +190,32 @@ const Orders = () => {
     try {
       const res = await getAllOrders(token);
       const orderData = res.data;
-      console.log("Hello",orderData);
+
       const enrichedOrders = await Promise.all(
         orderData.map(async (order) => {
           const productsWithDetails = await Promise.all(
             order.products.map(async (p) => {
               try {
                 const productRes = await getProductDetails(p.product);
+                // Ensure default values if product details are missing
                 return {
                   ...productRes.data,
+                  name: productRes.data?.name || "Unknown Product",
+                  img: productRes.data?.img || "placeholder_image_url", // Add a placeholder
+                  price: productRes.data?.price || { mrp: "N/A" },
                   size: p.size,
                   quantity: p.quantity,
                 };
               } catch (err) {
-                console.error("Error fetching product:", err);
-                return { name: "Unknown Product", quantity: p.quantity };
+                console.error(`Error fetching product ${p.product}:`, err);
+                return {
+                  _id: p.product, // Keep the ID for unique key if product details fail
+                  name: "Product Not Available", // Fallback name
+                  img: "placeholder_image_url", // Use a placeholder for missing images
+                  price: { mrp: "N/A" },
+                  size: p.size,
+                  quantity: p.quantity,
+                };
               }
             })
           );
@@ -147,55 +226,81 @@ const Orders = () => {
           };
         })
       );
-      console.log(enrichedOrders);
       setOrders(enrichedOrders);
     } catch (error) {
       console.error("Failed to load orders", error);
+      // You might want to dispatch a snackbar here as well
     } finally {
       setLoading(false);
     }
   };
+
   const toggleExpand = (orderId) => {
     setExpandedOrderId((prevId) => (prevId === orderId ? null : orderId));
   };
+
   useEffect(() => {
     fetchOrders();
   }, []);
+// console.table(orders[0].total_amount);
   return (
     <Container>
       <Section>
         <Title>Your Orders</Title>
         {loading ? (
-          <CircularProgress />
+          <CircularProgress color="inherit" /> /* Use inherit to pick up theme color */
         ) : orders.length === 0 ? (
-          <div>No orders found.</div>
+          <EmptyOrders>You haven't placed any orders yet.</EmptyOrders>
         ) : (
           orders.map((order) => (
             <OrderCard key={order._id}>
-              <OrderInfo><strong>Order ID:</strong> {order._id}</OrderInfo>
-              <OrderInfo><strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()}</OrderInfo>
-              <OrderInfo><strong>Address:</strong> {order.address}</OrderInfo>
-              <OrderInfo><strong>Status:</strong> {order.status}</OrderInfo>
-              <OrderInfo><strong>Total:</strong> ${parseFloat(order.total_amount.$numberDecimal).toFixed(2)}</OrderInfo>
-              <TimeAgo>{formatDistanceStrict(new Date(order.createdAt), new Date(), { addSuffix: true })}</TimeAgo>
+              <OrderSummary>
+                <OrderInfo>
+                  <strong>Order ID:</strong> <span>{order._id}</span>
+                </OrderInfo>
+                <OrderInfo>
+                  <strong>Date:</strong>{" "}
+                  <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                </OrderInfo>
+                <OrderInfo>
+                  <strong>Total:</strong>{" "}
+                  <span>
+                    ${parseFloat(order.total_amount.$numberDecimal).toFixed(2)}
+                  </span>
+                </OrderInfo>
+                <OrderInfo>
+                  <strong>Status:</strong> <span>{order.status}</span>
+                </OrderInfo>
+              </OrderSummary>
+
+              {/* Display address below summary as it can be long */}
+              <OrderInfo style={{ fontSize: "14px" }}>
+                <strong>Delivery Address:</strong>{" "}
+                <span>{order.address}</span>
+              </OrderInfo>
+
+              <TimeAgo>
+                Ordered {formatDistanceStrict(new Date(order.createdAt), new Date(), { addSuffix: true })}
+              </TimeAgo>
+
               <ToggleButton onClick={() => toggleExpand(order._id)}>
-                {expandedOrderId === order._id ? "Hide Products  ▴" : "Show Products ▾"}
+                {expandedOrderId === order._id ? "Hide Products  ⛌" : "Show Products ▾"}
               </ToggleButton>
 
               {expandedOrderId === order._id && (
-                <div>
-                  {order.products.map((product, i) => (
-                    <ProductItem key={i + 1}>
+                <ProductList>
+                  {order.products.map((product) => (
+                    <ProductItem key={product._id}>
                       <ProductDetails>
                         <ProductTitle>{product.name}</ProductTitle>
-                        <OrderInfo>Quantity: {product.quantity}</OrderInfo>
-                        <OrderInfo>Size: {product.size}</OrderInfo>
-                        <OrderInfo>Price: ${product.price.mrp}</OrderInfo>
+                        <ProductInfo>Quantity: {product.quantity}</ProductInfo>
+                        <ProductInfo>Size: {product.size}</ProductInfo>
+                        <ProductInfo>Price: ${product.price.mrp}</ProductInfo>
                       </ProductDetails>
                       <Image src={product.img} alt={product.name} />
                     </ProductItem>
                   ))}
-                </div>
+                </ProductList>
               )}
             </OrderCard>
           ))
