@@ -10,7 +10,7 @@ import Favourite from "./pages/Favourite";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import ProductDetails from "./pages/ProductDetails";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ToastMessage from "./components/ToastMessage";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
