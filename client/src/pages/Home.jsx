@@ -21,7 +21,7 @@ const Container = styled.div`
   background: ${({ theme }) => theme.bg};
 `;
 const Section = styled.div`
-  max-width: 1400px;
+  max-width: 100%;
   padding: 32px 16px;
   display: flex;
   flex-direction: column;
