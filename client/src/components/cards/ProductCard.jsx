@@ -18,7 +18,7 @@ import { openSnackbar } from "../../redux/reducers/snackbarSlice";
 import { Toaster } from "../Toaster";
 
 const Card = styled.div`
-  width: 250px;
+  max-width: 47%;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -118,7 +118,9 @@ const Price = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
+  word-wrap:break-word;
+  overflow:hidden;
+  font-size: 16px;
   font-weight: 500;
   color: ${({ theme }) => theme.text_primary};
 `;

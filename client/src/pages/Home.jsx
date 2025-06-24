@@ -46,7 +46,7 @@ const CardWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
-  justify-content: center;
+  justify-content: space-evenly;
   @media (max-width: 750px) {
     gap: 14px;
   }
