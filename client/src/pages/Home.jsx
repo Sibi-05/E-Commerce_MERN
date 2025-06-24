@@ -28,7 +28,7 @@ const Section = styled.div`
   gap: 28px;
 `;
 const Img = styled.img`
-  width: 90%;
+  width: 100%;
   height: 700px;
   object-fit: cover;
   max-width: 1200px;
