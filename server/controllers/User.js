@@ -36,7 +36,7 @@ export const UserRegister = async (req, res, next) => {
 
     const token = jwt.sign(
       { id: createdUser._id },
-      process.env.JWT,
+      process.env.KEY,
       { expiresIn: "9999 years" }
     );
 
@@ -74,7 +74,7 @@ export const UserLogin = async (req, res, next) => {
 
     const token = jwt.sign(
       { id: existingUser._id },
-      process.env.JWT,
+      process.env.KEY,
       { expiresIn: "9999 years" }
     );
 
