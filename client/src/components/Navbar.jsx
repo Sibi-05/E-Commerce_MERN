@@ -198,11 +198,13 @@ const Navbar = ({ openAuth, setOpenAuth, currentUser }) => {
               >
                 <Button
                   text="Sign Up"
+                  id="signupb"
                   outlined
                   small
                   onClick={() => setOpenAuth(!openAuth)}
                 />
                 <Button
+                  id="signb"
                   text="Sign In"
                   small
                   onClick={() => setOpenAuth(!openAuth)}
